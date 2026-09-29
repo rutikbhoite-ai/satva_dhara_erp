@@ -1,13 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/widgets/app_shell.dart';
+import '../../core/widgets/module_placeholder_screen.dart';
+import '../../features/animals/presentation/screens/add_animal_screen.dart';
+import '../../features/animals/presentation/screens/animal_list_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
-import '../../core/widgets/module_placeholder_screen.dart';
 import '../app_bootstrap.dart';
 import '../localization/app_localizations.dart';
-import '../../core/widgets/app_shell.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/dashboard',
@@ -38,6 +40,16 @@ final appRouter = GoRouter(
           path: '/dashboard',
           builder: (context, state) => const DashboardScreen(),
         ),
+        GoRoute(
+          path: '/animals',
+          builder: (context, state) => const AnimalListScreen(),
+          routes: [
+            GoRoute(
+              path: 'add',
+              builder: (context, state) => const AddAnimalScreen(),
+            ),
+          ],
+        ),
         ..._moduleRoutes,
       ],
     ),
@@ -49,7 +61,6 @@ final appRouter = GoRouter(
 );
 
 final _moduleRoutes = <GoRoute>[
-  _route('/animals', 'animals', Icons.pets_outlined),
   _route('/milk', 'milk', Icons.water_drop_outlined),
   _route('/health', 'health', Icons.medical_services_outlined),
   _route('/breeding', 'breeding', Icons.sync_alt_outlined),
