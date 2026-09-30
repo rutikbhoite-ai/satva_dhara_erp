@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_radius.dart';
 import '../../../../app/theme/app_spacing.dart';
+import '../../application/animal_core_service.dart';
+import '../../application/animal_master_providers.dart';
 import '../../application/animal_providers.dart';
 import '../../domain/enums/animal_enums.dart';
 
@@ -366,30 +368,11 @@ class _AddAnimalScreenState extends ConsumerState<AddAnimalScreen> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final now = DateTime.now();
-    if (_dob.isAfter(now)) {
-      _showError('Date of birth cannot be in the future.');
-      return;
-    }
-
     final farmId = ref.read(currentFarmIdProvider);
-    final repository = ref.read(animalRepositoryProvider);
+    final service = ref.read(animalCoreServiceProvider);
 
     setState(() => _saving = true);
     try {
-      final existing = await repository.search(
-        farmId: farmId,
-        query: _tagController.text.trim(),
-        activeOnly: false,
-      );
-      final duplicate = existing.any(
-        (animal) => animal.tagNumber.toLowerCase() == _tagController.text.trim().toLowerCase(),
-      );
-      if (duplicate) {
-        _showError('This tag number already exists in this farm.');
-        return;
-      }
-
       final weight = double.tryParse(_weightController.text.trim());
       final purchasePrice = double.tryParse(_purchasePriceController.text.trim());
 
@@ -413,12 +396,14 @@ class _AddAnimalScreenState extends ConsumerState<AddAnimalScreen> {
         notes: _notesController.text,
       );
 
-      await repository.create(animal);
+      await service.createAnimal(animal);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Animal saved successfully.')),
       );
       context.pop();
+    } on AnimalBusinessException catch (error) {
+      _showError(error.message);
     } finally {
       if (mounted) setState(() => _saving = false);
     }

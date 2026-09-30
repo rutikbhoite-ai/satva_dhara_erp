@@ -40,9 +40,15 @@ class _AnimalListScreenState extends ConsumerState<AnimalListScreen> {
       subtitle: 'Central animal identity, status and operational records.',
       actions: [
         OutlinedButton.icon(
-          onPressed: () {},
-          icon: const Icon(Icons.qr_code_scanner_rounded),
-          label: const Text('Scan QR'),
+          onPressed: () => context.push('/animals/breeds'),
+          icon: const Icon(Icons.biotech_outlined),
+          label: const Text('Breeds'),
+        ),
+        const SizedBox(width: 8),
+        OutlinedButton.icon(
+          onPressed: () => context.push('/animals/locations'),
+          icon: const Icon(Icons.home_work_outlined),
+          label: const Text('Locations'),
         ),
         const SizedBox(width: 8),
         FilledButton.icon(

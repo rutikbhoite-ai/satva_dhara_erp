@@ -39,7 +39,9 @@ class AppShell extends StatelessWidget {
       '/ai',
       '/settings',
     ];
-    final index = paths.indexOf(location);
+    final index = paths.indexWhere(
+      (path) => location == path || location.startsWith('$path/'),
+    );
     return index < 0 ? 0 : index;
   }
 
@@ -329,7 +331,15 @@ class _TopBar extends StatelessWidget {
       '/ai': 'ai',
       '/settings': 'settings',
     };
-    final key = map[location] ?? 'dashboard';
+    final key = map.entries
+            .where(
+              (entry) =>
+                  location == entry.key ||
+                  location.startsWith('${entry.key}/'),
+            )
+            .map((entry) => entry.value)
+            .firstOrNull ??
+        'dashboard';
     return strings.get(key);
   }
 

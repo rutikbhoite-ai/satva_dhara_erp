@@ -6,6 +6,9 @@ import '../../core/widgets/app_shell.dart';
 import '../../core/widgets/module_placeholder_screen.dart';
 import '../../features/animals/presentation/screens/add_animal_screen.dart';
 import '../../features/animals/presentation/screens/animal_list_screen.dart';
+import '../../features/animals/presentation/screens/animal_profile_screen.dart';
+import '../../features/animals/presentation/screens/breed_list_screen.dart';
+import '../../features/animals/presentation/screens/location_list_screen.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../app_bootstrap.dart';
@@ -47,6 +50,20 @@ final appRouter = GoRouter(
             GoRoute(
               path: 'add',
               builder: (context, state) => const AddAnimalScreen(),
+            ),
+            GoRoute(
+              path: 'breeds',
+              builder: (context, state) => const BreedListScreen(),
+            ),
+            GoRoute(
+              path: 'locations',
+              builder: (context, state) => const LocationListScreen(),
+            ),
+            GoRoute(
+              path: ':animalId',
+              builder: (context, state) => AnimalProfileScreen(
+                animalId: state.pathParameters['animalId']!,
+              ),
             ),
           ],
         ),
